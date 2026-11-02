@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailNova | Railway Reservation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/my-bookings">My Bookings</a>
+
+        {% if session.get('user_id') %}
+            <span>Hi, {{ session.get('user_name') }}</span>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        {% endif %}
+        <a href="/pnr">PNR Status</a>
+        {% if session.get('role') == 'admin' %}
+            <a href="/admin">Admin Dashboard</a>
+        {% endif %}
+    </div>
+
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <p class="tagline">YOUR JOURNEY, OUR PRIORITY</p>
+        <h1>Travel smarter.<br><span>Travel better.</span></h1>
+        <p class="subtitle">
+            Discover trains, reserve your seats and enjoy a seamless
+            railway booking experience.
+        </p>
+    </div>
+
+    <div class="search-card">
+        <h2>Book Your Journey</h2>
+        <p>Find your next train adventure.</p>
+
+        <form action="/trains" method="GET">
+            <div class="form-group">
+                <label>From</label>
+                <input type="text" name="source"
+                       placeholder="Departure station" required>
+            </div>
+
+            <div class="form-group">
+                <label>To</label>
+                <input type="text" name="destination"
+                       placeholder="Arrival station" required>
+            </div>
+
+            <div class="form-group">
+                <label>Journey Date</label>
+                <input type="date" name="date" required>
+            </div>
+
+            <button type="submit">Search Trains →</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    © 2026 RailNova. Smart Railway Reservation System.
+</footer>
+
+</body>
+</html>

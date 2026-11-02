@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/my-bookings">My Bookings</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="results-section">
+
+    <h1>My Bookings</h1>
+    <p class="results-subtitle">
+        Welcome, {{ session.user_name }}! Here are your reservations.
+    </p>
+
+    {% if bookings %}
+
+        {% for booking in bookings %}
+
+        <div class="train-card">
+
+            <div class="booking-heading">
+                <div>
+                    <h2>{{ booking.train_name }}</h2>
+                    <p class="train-number">
+                        Train No: {{ booking.train_number }}
+                    </p>
+                </div>
+
+                <span class="status {{ booking.status|lower }}">
+                    {{ booking.status }}
+                </span>
+            </div>
+
+            <div class="booking-details">
+                <p><strong>PNR:</strong> {{ booking.pnr }}</p>
+                <p><strong>Passenger:</strong> {{ booking.passenger_name or 'N/A' }}</p>
+                <p><strong>Journey:</strong>
+                    {{ booking.source_name }} → {{ booking.destination_name }}
+                </p>
+                <p><strong>Date:</strong> {{ booking.journey_date }}</p>
+                <p><strong>Seat:</strong> {{ booking.seat_number or 'N/A' }}</p>
+                <p><strong>Fare:</strong> ₹{{ "%.2f"|format(booking.total_fare) }}</p>
+                {% if booking.status == 'CONFIRMED' %}
+                    <form method="POST"
+                        action="{{ url_for('cancel_ticket', booking_id=booking.booking_id) }}"
+                        onsubmit="return confirm('Are you sure you want to cancel this ticket?');">
+
+                        <button type="submit" class="cancel-button">
+                            Cancel Ticket
+                        </button>
+
+                    </form>
+                {% endif %}
+                {% with messages = get_flashed_messages() %}
+                    {% for message in messages %}
+                        <div class="success-message">{{ message }}</div>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-trains">
+            <h2>No bookings yet!</h2>
+            <p>Your confirmed tickets will appear here.</p>
+            <a href="/">Book a Train</a>
+        </div>
+
+    {% endif %}
+
+</section>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Ticket | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+    </div>
+</nav>
+
+<section class="results-section">
+    <div class="search-card booking-card">
+        <h2>Passenger Details</h2>
+        <p>Enter the passenger information to reserve your ticket.</p>
+
+        <div class="booking-summary">
+            <h3>{{ train.train_name }}</h3>
+            <p>{{ train.source_name }} → {{ train.destination_name }}</p>
+            <p>Journey date: {{ train.journey_date }}</p>
+            <h3>₹{{ "%.2f"|format(train.fare) }}</h3>
+        </div>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Passenger Name</label>
+                <input type="text" name="passenger_name"
+                       placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age"
+                       min="1" max="120" required>
+            </div>
+
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <button type="submit">Confirm Booking</button>
+        </form>
+    </div>
+</section>
+
+</body>
+</html>

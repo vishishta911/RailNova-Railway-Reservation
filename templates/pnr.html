@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNR Status | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/my-bookings">My Bookings</a>
+        {% if session.get('user_id') %}
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<section class="results-section">
+
+    <div class="search-card booking-card">
+        <h2>Check PNR Status</h2>
+        <p>Enter your PNR number to view your reservation.</p>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>PNR Number</label>
+                <input
+                    type="text"
+                    name="pnr"
+                    placeholder="Example: RN0757CFB9E9"
+                    required>
+            </div>
+
+            <button type="submit">Check Status</button>
+        </form>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    {% if booking %}
+
+    <div class="train-card pnr-result">
+
+        <div class="booking-heading">
+            <h2>Reservation Details</h2>
+
+            <span class="status {{ booking.status|lower }}">
+                {{ booking.status }}
+            </span>
+        </div>
+
+        <div class="booking-details">
+            <p><strong>PNR:</strong> {{ booking.pnr }}</p>
+            <p><strong>Train:</strong> {{ booking.train_name }}</p>
+            <p><strong>Train Number:</strong> {{ booking.train_number }}</p>
+            <p><strong>Passenger:</strong> {{ booking.passenger_name or 'N/A' }}</p>
+            <p><strong>Age:</strong> {{ booking.age or 'N/A' }}</p>
+            <p><strong>Gender:</strong> {{ booking.gender or 'N/A' }}</p>
+            <p><strong>From:</strong> {{ booking.source_name }}</p>
+            <p><strong>To:</strong> {{ booking.destination_name }}</p>
+            <p><strong>Journey Date:</strong> {{ booking.journey_date }}</p>
+            <p><strong>Seat Number:</strong> {{ booking.seat_number or 'N/A' }}</p>
+            <p><strong>Total Fare:</strong> ₹{{ "%.2f"|format(booking.total_fare) }}</p>
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+</body>
+</html>

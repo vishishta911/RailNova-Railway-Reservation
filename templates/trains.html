@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Trains | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="#">My Bookings</a>
+        <a href="#">Login</a>
+    </div>
+</nav>
+
+<section class="results-section">
+
+    <h1>Available Trains</h1>
+
+    <p class="results-subtitle">
+        {{ source }} → {{ destination }} |
+        Journey Date: {{ journey_date }}
+    </p>
+
+    {% if trains %}
+
+        {% for train in trains %}
+
+        <div class="train-card">
+
+            <div>
+                <h2>{{ train.train_name }}</h2>
+                <p class="train-number">
+                    Train No: {{ train.train_number }}
+                </p>
+            </div>
+
+            <div class="train-details">
+
+                <div>
+                    <h3>{{ train.departure_time }}</h3>
+                    <p>{{ train.source_name }}</p>
+                </div>
+
+                <div class="arrow">────────→</div>
+
+                <div>
+                    <h3>{{ train.arrival_time }}</h3>
+                    <p>{{ train.destination_name }}</p>
+                </div>
+
+            </div>
+
+            <div class="train-bottom">
+
+                <span>
+                    Seats Available: {{ train.available_seats }}
+                </span>
+
+                <span class="fare">
+                    ₹{{ "%.2f"|format(train.fare) }}
+                </span>
+
+                <a class="book-link"
+                    href="{{ url_for('book_ticket', run_id=train.run_id) }}">
+                        Book Now
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-trains">
+            <h2>No trains found!</h2>
+            <p>Try another route or journey date.</p>
+            <a href="/">Search Again</a>
+        </div>
+
+    {% endif %}
+
+</section>
+
+</body>
+</html>

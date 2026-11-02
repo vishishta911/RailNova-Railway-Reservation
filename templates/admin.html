@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/admin">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<section class="admin-section">
+
+    <div class="admin-heading">
+        <div>
+            <p class="tagline">RAILNOVA MANAGEMENT</p>
+            <h1>Admin Dashboard</h1>
+            <p>Welcome, {{ session.get('user_name') }}</p>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% for message in messages %}
+            <div class="success-message">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <!-- STATISTICS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <p>Total Trains</p>
+            <h2>{{ stats.total_trains }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Passengers</p>
+            <h2>{{ stats.total_passengers }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Total Bookings</p>
+            <h2>{{ stats.total_bookings }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Confirmed Bookings</p>
+            <h2>{{ stats.confirmed_bookings }}</h2>
+        </div>
+
+        <div class="stat-card">
+            <p>Booking Revenue</p>
+            <h2>₹{{ "%.2f"|format(stats.revenue) }}</h2>
+        </div>
+
+    </div>
+
+    <!-- ADD TRAIN -->
+
+    <div class="admin-panel">
+        <h2>Add New Train</h2>
+
+        <form action="/admin/add-train" method="POST"
+              class="admin-form">
+
+            <div class="form-group">
+                <label>Train Number</label>
+                <input type="text" name="train_number" required>
+            </div>
+
+            <div class="form-group">
+                <label>Train Name</label>
+                <input type="text" name="train_name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Source Station</label>
+                <select name="source_id" required>
+                    <option value="">Select source</option>
+                    {% for station in stations %}
+                        <option value="{{ station.station_id }}">
+                            {{ station.station_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Destination Station</label>
+                <select name="destination_id" required>
+                    <option value="">Select destination</option>
+                    {% for station in stations %}
+                        <option value="{{ station.station_id }}">
+                            {{ station.station_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Departure Time</label>
+                <input type="time" name="departure_time" required>
+            </div>
+
+            <div class="form-group">
+                <label>Arrival Time</label>
+                <input type="time" name="arrival_time" required>
+            </div>
+
+            <div class="form-group">
+                <label>Total Seats</label>
+                <input type="number" name="total_seats"
+                       min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Ticket Fare (₹)</label>
+                <input type="number" name="fare"
+                       min="1" step="0.01" required>
+            </div>
+
+            <button type="submit">Add Train</button>
+
+        </form>
+    </div>
+
+    <!-- TRAIN MANAGEMENT -->
+
+    <div class="admin-panel">
+        <h2>Train Management</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Train Name</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Fare</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for train in trains %}
+                    <tr>
+                        <td>{{ train.train_number }}</td>
+                        <td>{{ train.train_name }}</td>
+                        <td>{{ train.source_name }}</td>
+                        <td>{{ train.destination_name }}</td>
+                        <td>{{ train.departure_time }}</td>
+                        <td>{{ train.arrival_time }}</td>
+                        <td>₹{{ train.fare }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ALL BOOKINGS -->
+
+    <div class="admin-panel">
+        <h2>Recent Reservations</h2>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PNR</th>
+                        <th>Passenger</th>
+                        <th>Train</th>
+                        <th>Journey Date</th>
+                        <th>Fare</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.pnr }}</td>
+                        <td>{{ booking.passenger_name }}</td>
+                        <td>{{ booking.train_name }}</td>
+                        <td>{{ booking.journey_date }}</td>
+                        <td>₹{{ booking.total_fare }}</td>
+                        <td>{{ booking.status }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No reservations found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

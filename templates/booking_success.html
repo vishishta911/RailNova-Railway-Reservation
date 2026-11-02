@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed | RailNova</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Rail<span>Nova</span></div>
+    <a href="/">Home</a>
+</nav>
+
+<section class="results-section">
+    <div class="success-card">
+
+        <div class="success-icon">✓</div>
+
+        <h1>Booking Confirmed!</h1>
+        <p>Your ticket has been successfully reserved.</p>
+
+        <div class="ticket">
+            <p class="ticket-label">YOUR PNR NUMBER</p>
+            <h2>{{ pnr }}</h2>
+
+            <hr>
+
+            <p><strong>Passenger:</strong> {{ name }}</p>
+            <p><strong>Train:</strong> {{ train.train_name }}</p>
+            <p><strong>Journey:</strong>
+                {{ train.source_name }} → {{ train.destination_name }}
+            </p>
+            <p><strong>Date:</strong> {{ train.journey_date }}</p>
+            <p><strong>Seat:</strong> {{ seat_number }}</p>
+            <p><strong>Fare:</strong> ₹{{ "%.2f"|format(fare) }}</p>
+        </div>
+
+        <a href="/" class="home-link">Back to Home</a>
+
+    </div>
+</section>
+
+</body>
+</html>
